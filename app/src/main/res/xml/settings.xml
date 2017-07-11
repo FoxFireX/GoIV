@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">>
 
 
     <PreferenceCategory
-        android:title="App behaviour preferences">
+        android:title="@string/settings_title_behaviour">
 
         <SwitchPreference
             android:defaultValue="true"
@@ -17,6 +18,11 @@
             android:summary="@string/confirmation_dialog_setting_summary"
             android:title="@string/confirmation_dialog_setting_title"/>
 
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="autoOpenAppraiseDialogue"
+            android:summary="@string/expanded_appraisal_default_setting_summary"
+            android:title="@string/expanded_appraisal_default_setting_title"/>
 
         <SwitchPreference
             android:defaultValue="false"
@@ -28,7 +34,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Optional GoIV Features">
+        android:title="@string/settings_title_optional">
 
 
         <SwitchPreference
@@ -63,11 +69,40 @@
             android:key="pokeSpamEnabled"
             android:summary="@string/pokespam_setting_summary"
             android:title="@string/pokespam_setting_title"/>
+
+        <com.pavelsikun.seekbarpreference.SeekBarPreference
+            android:key="autoAppraisalScanDelay"
+            android:title="@string/autoAppraisalScanDelay_title"
+            android:summary="@string/autoAppraisalScanDelay_summary"
+            android:defaultValue="400"
+
+            app:msbp_minValue="200"
+            app:msbp_maxValue="1000"
+            app:msbp_interval="50"
+            app:msbp_measurementUnit="ms"
+            app:msbp_dialogEnabled="false"/>
+
+
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="quick_iv_preview"
+            android:title="Show quick IV preview"
+            android:summary="Display a small preview automatically when on a 'mon screen."
+        />
+
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="quick_iv_preview_clipboard"
+            android:dependency="quick_iv_preview"
+            android:title="Show your custom clipboard in the preview"
+            android:summary="Replace the normal quick preview with the content of your custom clipboard."
+            />
+
     </PreferenceCategory>
 
 
     <PreferenceCategory
-        android:title="GoIV Mode">
+        android:title="@string/settings_title_mode">
         <SwitchPreference
             android:defaultValue="false"
             android:key="@string/manual_screenshot_mode_key"
@@ -85,7 +120,7 @@
     </PreferenceCategory>
 
     <PreferenceCategory
-        android:title="Uninteresting settings">
+        android:title="@string/settings_title_uninteresting">
 
 
         <SwitchPreference
