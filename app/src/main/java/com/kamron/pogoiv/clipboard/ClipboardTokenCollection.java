@@ -1,15 +1,12 @@
 package com.kamron.pogoiv.clipboard;
 
 import com.kamron.pogoiv.clipboard.tokens.BaseStatToken;
-import com.kamron.pogoiv.clipboard.tokens.CPMaxToken;
 import com.kamron.pogoiv.clipboard.tokens.CpPercentileToken;
 import com.kamron.pogoiv.clipboard.tokens.CpTierToken;
-import com.kamron.pogoiv.clipboard.tokens.ExtendedCpTierToken;
 import com.kamron.pogoiv.clipboard.tokens.HexIVToken;
 import com.kamron.pogoiv.clipboard.tokens.HpToken;
 import com.kamron.pogoiv.clipboard.tokens.IVPercentageToken;
 import com.kamron.pogoiv.clipboard.tokens.IVPercentageTokenMode;
-import com.kamron.pogoiv.clipboard.tokens.IVSum;
 import com.kamron.pogoiv.clipboard.tokens.LevelToken;
 import com.kamron.pogoiv.clipboard.tokens.LevelUnicodeToken;
 import com.kamron.pogoiv.clipboard.tokens.PerfectionCPPercentageToken;
@@ -17,7 +14,6 @@ import com.kamron.pogoiv.clipboard.tokens.PokemonNameToken;
 import com.kamron.pogoiv.clipboard.tokens.PowerupsToMaxToken;
 import com.kamron.pogoiv.clipboard.tokens.SeparatorToken;
 import com.kamron.pogoiv.clipboard.tokens.UnicodeToken;
-import com.kamron.pogoiv.clipboard.tokens.MixedUnicodeToken;
 
 import java.util.ArrayList;
 
@@ -61,8 +57,7 @@ public class ClipboardTokenCollection {
         tokens.add(new HpToken(false, true)); // hp on current evolution, current level
         tokens.add(new HpToken(false, false)); //hp on current evolution, level 40
 
-        tokens.add(new CPMaxToken(true)); //CP on max evolution, level 40
-        tokens.add(new CPMaxToken(false)); //CP on current evolution, level 40
+
         //stat tokens
         tokens.add(new BaseStatToken(false, 0, false)); //base evolution, all stats, dont invlude iv
         tokens.add(new BaseStatToken(false, 0, true)); //base evolution, all stats,  invlude iv
@@ -74,8 +69,6 @@ public class ClipboardTokenCollection {
         // Evaluating scores////////////////////////////////
         tokens.add(new CpTierToken(true)); //Pokemon max evolution  max level CP tier
         tokens.add(new CpTierToken(false)); //pokemon max level cp tier
-        tokens.add(new ExtendedCpTierToken(false)); // Max AA-ZZ cp tier
-        tokens.add(new ExtendedCpTierToken(true)); // Same as above, max evolution
 
         tokens.add(new CpPercentileToken(false));
 
@@ -89,14 +82,9 @@ public class ClipboardTokenCollection {
         tokens.add(new IVPercentageToken(IVPercentageTokenMode.AVG));
         tokens.add(new IVPercentageToken(IVPercentageTokenMode.MAX));
 
-        //Sum
-        tokens.add(new IVSum(true));
-
         //Unicode iv representations
         tokens.add(new UnicodeToken(false)); //Unicode iv circled numbers not filled in ex ⑦⑦⑦
         tokens.add(new UnicodeToken(true));//Unicode iv circled numbers  filled in black ex ⓿⓿⓿
-        tokens.add(new MixedUnicodeToken(false)); //Mixed Unicode IV, empty exact, filled multiple ex ⑦⓿⑦
-        tokens.add(new MixedUnicodeToken(true)); //Mixed Unicode IV, filled exact, empty multiple ex ⓿⓿⑦
         tokens.add(new HexIVToken()); //hex representation of iv (ex A4B)
         /////////////////////////////////////////////////////////
 

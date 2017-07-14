@@ -87,19 +87,16 @@ public class ScreenGrabber {
     public @Nullable Bitmap grabScreen() {
         Image image = null;
         Bitmap bmp = null;
-        Integer retries = 100;
 
-        while (image == null && retries > 0) {
-            try {
-                //Note: imageReader shouldn't be null, but apparently sometimes is.
-                //Let's allow this to still happen.
-                image = imageReader.acquireLatestImage();
-            } catch (Exception exception) {
-                Timber.e("Error thrown in grabScreen() - acquireLatestImage()");
-                Timber.e(exception);
-            }
-            retries--;
+        try {
+            //Note: imageReader shouldn't be null, but apparently sometimes is.
+            //Let's allow this to still happen.
+            image = imageReader.acquireLatestImage();
+        } catch (Exception exception) {
+            Timber.e("Error thrown in grabScreen() - acquireLatestImage()");
+            Timber.e(exception);
         }
+
         if (image != null) {
             final Image.Plane[] planes = image.getPlanes();
             final ByteBuffer buffer = planes[0].getBuffer();

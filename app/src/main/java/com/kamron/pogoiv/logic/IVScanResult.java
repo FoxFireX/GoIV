@@ -17,7 +17,7 @@ import java.util.Comparator;
  * lowPercent: worst case IV%
  * low attack,defence,stamina - the value for the IV stat where the lowest % was found
  * high attack,defence,stamina - the value for hte IV stat where the highest % was found
- * <p>
+ *
  * The ivscanresult object has evolved (bloated) to incluide several other things not needed to calculate the ivs,
  * which are used by other methods, such as the scanned hp and an identifier for the pokemon.
  * <p/>
@@ -45,7 +45,7 @@ public class IVScanResult {
      * @param pokemonCP             pokemon CP
      * @param estimatedPokemonLevel the estimated pokemon level (should be very low)
      */
-    public IVScanResult(Pokemon pokemon, double estimatedPokemonLevel, int pokemonCP) {
+    IVScanResult(Pokemon pokemon, double estimatedPokemonLevel, int pokemonCP) {
         this.pokemon = pokemon;
         this.estimatedPokemonLevel = estimatedPokemonLevel;
         this.scannedCP = pokemonCP;
@@ -117,6 +117,7 @@ public class IVScanResult {
             highStamina = staminaIV;
         }
 
+
         iVCombinations.add(new IVCombination(attackIV, defenseIV, staminaIV));
     }
 
@@ -157,53 +158,6 @@ public class IVScanResult {
         return new IVCombination(lowAttack, lowDefense, lowStamina);
     }
 
-
-    /**
-     * Readjusts the low and high instance variables by looping through all the combinations again and re-checking them.
-     */
-    private void updateHighAndLowValues() {
-        lowAttack = 15;
-        lowDefense = 15;
-        lowStamina = 15;
-        highAttack = 0;
-        highDefense = 0;
-        highStamina = 0;
-        highPercent = 0;
-        lowPercent = 100;
-
-        for (IVCombination ivc : iVCombinations) {
-            int sumIV = ivc.att + ivc.def + ivc.sta;
-            int percentPerfect = Math.round(sumIV / 45f * 100);
-
-            if (ivc.att < lowAttack) {
-                lowAttack = ivc.att;
-            }
-            if (ivc.def < lowDefense) {
-                lowDefense = ivc.def;
-            }
-            if (ivc.sta < lowStamina) {
-                lowStamina = ivc.sta;
-            }
-
-            if (ivc.att > highAttack) {
-                highAttack = ivc.att;
-            }
-            if (ivc.def > highDefense) {
-                highDefense = ivc.def;
-            }
-            if (ivc.sta > highStamina) {
-                highStamina = ivc.sta;
-            }
-            if (percentPerfect > highPercent) {
-                highPercent = percentPerfect;
-            }
-            if (percentPerfect < lowPercent) {
-                lowPercent = percentPerfect;
-            }
-        }
-
-    }
-
     /**
      * Removes all possible IV combinations where the boolean set to true stat isnt the highest.
      * Several stats can be highest if they're equal.
@@ -218,7 +172,6 @@ public class IVScanResult {
             }
         }
         iVCombinations = refinedList;
-        updateHighAndLowValues();
     }
 
     /**
@@ -266,7 +219,6 @@ public class IVScanResult {
         }
 
         iVCombinations = refinedList;
-        updateHighAndLowValues();
     }
 
     /**
@@ -314,7 +266,5 @@ public class IVScanResult {
             }
         }
         iVCombinations = refinedList;
-
-        updateHighAndLowValues();
     }
 }

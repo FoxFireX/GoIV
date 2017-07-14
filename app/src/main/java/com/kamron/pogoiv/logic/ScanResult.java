@@ -11,7 +11,6 @@ import com.google.common.base.Optional;
 public class ScanResult {
     private final double estimatedPokemonLevel;
     private final String pokemonName;
-    private final String pokemonType;
     private final String candyName;
     private final Optional<Integer> pokemonHP;
     private final Optional<Integer> pokemonCP;
@@ -19,12 +18,11 @@ public class ScanResult {
     private final Optional<Integer> upgradeCandyCost;
     private final String uniqueID;
 
-    public ScanResult(double estimatedPokemonLevel, String pokemonName, String pokemonType, String candyName,
-                      Optional<Integer> pokemonHP, Optional<Integer> pokemonCP,
-                      Optional<Integer> pokemonCandyAmount, Optional<Integer> upgradeCandyCost, String uniqueID) {
+    public ScanResult(double estimatedPokemonLevel, String pokemonName, String candyName, Optional<Integer> pokemonHP,
+                      Optional<Integer> pokemonCP, Optional<Integer> pokemonCandyAmount,
+                      Optional<Integer> upgradeCandyCost, String uniqueID) {
         this.estimatedPokemonLevel = estimatedPokemonLevel;
         this.pokemonName = pokemonName;
-        this.pokemonType = pokemonType;
         this.candyName = candyName;
         this.pokemonHP = pokemonHP;
         this.pokemonCP = pokemonCP;
@@ -39,10 +37,6 @@ public class ScanResult {
 
     public String getPokemonName() {
         return pokemonName;
-    }
-
-    public String getPokemonType() {
-        return pokemonType;
     }
 
     public String getCandyName() {

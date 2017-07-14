@@ -71,10 +71,10 @@ android {
      * versionName (Based on Semantic Versioning 2.0 - http://semver.org/)
      */
     defaultConfig {
-        minSdkVersion 19 /*Dont change this unless you know why*/
-        targetSdkVersion 24 /*Dont change this unless you know why*/
-        versionCode 26
-        versionName "3.5.0"
+        minSdkVersion 19
+        targetSdkVersion 24
+        versionCode 21
+        versionName "3.3.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
@@ -136,9 +136,8 @@ dependencies {
     compile 'com.google.code.findbugs:jsr305:3.0.1'
     compile 'com.jakewharton:butterknife:8.4.0'
     compile 'com.jakewharton.timber:timber:4.3.0'
-    compile 'com.rmtheis:tess-two:7.0.0'
+    compile 'com.rmtheis:tess-two:6.0.4'
     compile 'io.apptik.widget:multislider:1.2'
-    compile 'com.pavelsikun:material-seekbar-preference:2.3.0'
     provided 'org.projectlombok:lombok:1.16.10'
     apt 'com.jakewharton:butterknife-compiler:8.4.0'
     apt "org.projectlombok:lombok:1.16.10"

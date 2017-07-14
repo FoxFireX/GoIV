@@ -3,7 +3,7 @@
     <string name="welcome_message">Instructions :\n1. Entrer niveau de dresseur\n2. Presser bouton GO et permettre capture d\'écran\n3. Choisir un Pokémon dans \'Pokémon Go\'\n4. Presser bouton IV pour scanner le Pokémon\n5. Ajuster données si besoin\n6. Vérifier les IV !</string>
     <string name="goiv_is_open_source">GoIV est open source !\ngithub.com/farkam135/GoIV\nreddit.com/r/GoIV</string>
     <string name="trainer_level">Niveau de Dresseur</string>
-
+    
     <string-array name="teams">
         <item name="mystic">"Sagesse"</item>
         <item name="valor">"Bravoure"</item>
@@ -12,6 +12,54 @@
     <string name="place1">"Dans l'ensemble, ton Pokémon…"</string>
     <string name="place2">"Ses stats…"</string>
 
+    <string-array name="mystic_percentage">
+        <item name="mplace1">@string/place1</item>
+        <item name="mystic80_100">"Est une merveille… captivant !"</item>
+        <item name="mystic67_79">…toute mon attention."</item>
+        <item name="mystic51_66">"…supérieur à la moyenne."</item>
+        <item name="mystic0_50">"N'ira pas très loin…"</item>
+    </string-array>
+
+    <string-array name="mystic_ivrange">
+        <item name="mplace2">@string/place2</item>
+        <item name="mysticiv15">"Dépassent tous mes calculs… !"</item>
+        <item name="mysticiv13_14">"Je suis impressionnée…"</item>
+        <item name="mysticiv8_12">"S'améliorent à vue d'œil."</item>
+        <item name="mysticiv0_7">"N'ont rien d'anormal."</item>
+    </string-array>
+
+    <string-array name="valor_percentage">
+        <item name="vplace1">@string/place1</item>
+        <item name="valor80_100">"M'étonne beaucoup… tout faire."</item>
+        <item name="valor67_79">"…très fort, …être fier."</item>
+        <item name="valor51_66">"…un Pokémon solide."</item>
+        <item name="valor0_50">"…pas un combattant."</item>
+    </string-array>
+
+    <string-array name="valor_ivrange">
+        <item name="vplace2">@string/place2</item>
+        <item name="valoriv15">"…estomaquée… Bravo !"</item>
+        <item name="valoriv13_14">"Sont excellentes ! …super !"</item>
+        <item name="valoriv8_12">"…va faire des dégâts au combat."</item>
+        <item name="valoriv0_7">"Ne t'aideront pas beaucoup…"</item>
+    </string-array>
+
+    <string-array name="instinct_percentage">
+        <item name="iplace1">@string/place1</item>
+        <item name="instinct80_100">"…tenir tête aux meilleurs."</item>
+        <item name="instinct67_79">"…vraiment fort."</item>
+        <item name="instinct51_66">"…plutôt bien."</item>
+        <item name="instinct0_50">"Peut devenir… meilleur…"</item>
+    </string-array>
+
+    <string-array name="instinct_ivrange">
+        <item name="iplace2">@string/place2</item>
+        <item name="instinctiv15">"…meilleures que j'ai jamais vues !"</item>
+        <item name="instinctiv13_14">"…super élevées. Impressionnant !"</item>
+        <item name="instinctiv8_12">"…quelques bonnes stats."</item>
+        <item name="instinctiv0_7">"…un peu basiques."</item>
+    </string-array>
+    
     <string name="pokemon_name">Nom du Pokémon :</string>
     <string name="cp">PC</string>
     <string name="hp">PV</string>
@@ -84,122 +132,4 @@
     <string name="pokespam_not_available">Indisponible</string>
     <string name="pokespam_setting_title">Activer le calcul de PokéSpam</string>
     <string name="pokespam_setting_summary">Scanne le nombre de bonbons pour calculer combien de Pokémon vous pouvez faire évoluer ; utile pour prévoir quand utiliser un œuf chance</string>
-
-    <string name="clipboard_modifier_preview">Aperçu</string>
-    <string name="position_handler_toast">Déplacez la fenêtre en déplaçant cette icône</string>
-    <string name="clipboard_no_token_selected">Veuillez choisir un symbole à ajouter depuis la liste défilante.</string>
-    <string name="clipboardButton">clipboardButton</string>
-    <string name="clipboardButton_summary">Configurez les informations que vous voulez automatiquement copier-coller</string>
-    <string name="clipboardButton_title">Paramétrer copie vers presse-papier</string>
-    <string name="clipboard_activity_title">Configuration du presse-papier GoIV</string>
-    <string name="showtranslatedpokemonname_setting_title">Montrer noms traduits des Pokémon</string>
-    <string name="showtranslatedpokemonname_setting_summary">Si votre application Pokémon Go est en anglais, mais que votre téléphone ne l\'est pas, cette option permet à GoIV de reconnaître les noms anglais des Pokémon tout en les affichant dans votre langue</string>
-    <string name="pause_goiv_notification">Pause</string>
-    <string name="waiting_for_pogo_start">En attente de Pokémon Go…</string>
-    <string name="goiv_started">GoIV lancé.</string>
-    <string name="clipboard_copy_toast">Copié %s vers le presse-papier</string>
-    <string name="no_clipboard_preview">Pas d\'aperçu disponible</string>
-    <string name="copy_to_clip_single_setting">Copier différemment un résultat unique</string>
-    <string name="copy_to_clip_single_setting_summary">Permet de paramétrer différemment la copie automatique des IV d\'un Pokémon si le scan ne donne qu\'une seule possibilité</string>
-    <string name="view_credits">Voir les crédits</string>
-    <string name="view_credits_summary">Voir les crédits de l\'application, les projets open-source utilisés et les remerciements</string>
-    <string name="title_activity_credits">CreditsActivity</string>
-    <string name="app_credits_title">Crédits</string>
-    <string name="view_credits_button">viewCredits</string>
-    <string name="copy_to_clipboard_setting_key">copyToClipboard</string>
-    <string name="manual_screenshot_mode_key">manualScreenshotMode</string>
-    <string name="android_sub5_warning">GoIV a détecté que votre téléphone n\'a pas l\'API MediaProjection, qui est utilisée pour montrer automatiquement le bouton IV. Cela pourrait être corrigé en mettant à jour votre téléphone vers Android 5 ou plus. L\'application va se restreindre au mode Capture d\'écran pour éviter de crasher. Vous pouvez utiliser GoIV en prenant une capture d\'écran manuellement, ce qui se fait en maintenant les boutons home+power pendant une courte durée. Nous sommes désolés pour cet inconvénient.</string>
-    <string name="copy_to_clip_show_toast_setting_summary">Montre un aperçu de ce qui a été copié dans une petite fenêtre</string>
-    <string name="copy_to_clip_show_toast_setting">Montrer aperçu du presse-papier</string>
-    <string name="autoAppraisalScanDelay_title">Délai d\'évaluation automatique</string>
-    <string name="autoAppraisalScanDelay_summary">Combien de temps attendre pour que le texte d\'évaluation d\'un Pokémon ait fini d\'apparaître. Les téléphones bas de gamme pourraient demander un délai de 800 ms.</string>
-
-    <string-array name="mystic_percentage">
-        <item name="mplace1">@string/place1</item>
-        <item name="mystic80_100">"Est une merveille… captivant !"</item>
-        <item name="mystic67_79">…toute mon attention."</item>
-        <item name="mystic51_66">"…supérieur à la moyenne."</item>
-        <item name="mystic0_50">"N'ira pas très loin…"</item>
-    </string-array>
-
-    <string-array name="mystic_ivrange">
-        <item name="mplace2">@string/place2</item>
-        <item name="mysticiv15">"Dépassent tous mes calculs… !"</item>
-        <item name="mysticiv13_14">"Je suis impressionnée…"</item>
-        <item name="mysticiv8_12">"S'améliorent à vue d'œil."</item>
-        <item name="mysticiv0_7">"N'ont rien d'anormal."</item>
-    </string-array>
-
-    <!-- Team mystic appraisal strings mv for iv % and ms for strongest stat range-->
-    <string name="mv4">n\'ira pas\ntrès loin</string>
-    <string name="mv3">supérieur à\nla moyenne</string>
-    <string name="mv2">toute mon\nattention</string>
-    <string name="mv1">merveille\ncaptivant</string>
-    <string name="ms4">rien\nd\'anormal</string>
-    <string name="ms3">s\'améliorent\n..vue d\'œil</string>
-    <string name="ms2">je suis\nimpress..</string>
-    <string name="ms1">dépassent..\nmes calculs</string>
-
-    <string-array name="valor_percentage">
-        <item name="vplace1">@string/place1</item>
-        <item name="valor80_100">"M'étonne beaucoup… tout faire."</item>
-        <item name="valor67_79">"…très fort, …être fier."</item>
-        <item name="valor51_66">"…un Pokémon solide."</item>
-        <item name="valor0_50">"…pas un combattant."</item>
-    </string-array>
-
-    <string-array name="valor_ivrange">
-        <item name="vplace2">@string/place2</item>
-        <item name="valoriv15">"…estomaquée… Bravo !"</item>
-        <item name="valoriv13_14">"Sont excellentes ! …super !"</item>
-        <item name="valoriv8_12">"…va faire des dégâts au combat."</item>
-        <item name="valoriv0_7">"Ne t'aideront pas beaucoup…"</item>
-    </string-array>
-
-    <!-- Team valor appraisal strings mv for iv % and ms for strongest stat range-->
-    <string name="vv4">pas un\ncombattant</string>
-    <string name="vv3">Pokémon solide</string>
-    <string name="vv2">fort..\nêtre fier</string>
-    <string name="vv1">m\'étonne\nbeaucoup</string>
-    <string name="vs4">aideront\npas..</string>
-    <string name="vs3">va faire\n..dégâts</string>
-    <string name="vs2">excellentes\nsuper</string>
-    <string name="vs1">estomaquée\nbravo</string>
-
-    <string-array name="instinct_percentage">
-        <item name="iplace1">@string/place1</item>
-        <item name="instinct80_100">"…tenir tête aux meilleurs."</item>
-        <item name="instinct67_79">"…vraiment fort."</item>
-        <item name="instinct51_66">"…plutôt bien."</item>
-        <item name="instinct0_50">"Peut devenir… meilleur…"</item>
-    </string-array>
-
-    <string-array name="instinct_ivrange">
-        <item name="iplace2">@string/place2</item>
-        <item name="instinctiv15">"…meilleures que j'ai jamais vues !"</item>
-        <item name="instinctiv13_14">"…super élevées. Impressionnant !"</item>
-        <item name="instinctiv8_12">"…quelques bonnes stats."</item>
-        <item name="instinctiv0_7">"…un peu basiques."</item>
-    </string-array>
-
-    <!-- Team instinct appraisal strings mv for iv % and ms for strongest stat range-->
-    <string name="iv4">devenir\n..meilleur</string>
-    <string name="iv3">plutôt bien</string>
-    <string name="iv2">vraiment fort</string>
-    <string name="iv1">tenir tête\n..meilleurs</string>
-    <string name="is4">un peu basiques</string>
-    <string name="is3">quelques bonnes stats</string>
-    <string name="is2">super élevées</string>
-    <string name="is1">meilleures\n..vues</string>
-
-
-    <string name="notification_title_goiv_stopped">GoIV s\'est arrêtée</string>
-    <string name="notification_title_increment_level">Niveau +1</string>
-    <string name="notification_title_tap_to_open">Touchez pour ouvrir GoIV</string>
-    <string name="token_pokemonname">Nom du Pokémon</string>
-    <string name="copy_to_clipboard_setting_summary_new">Copier automatiquement les infos scannées vers le presse-papier de copier-coller</string>
-    <string name="settings_title_behaviour">Comportement de l\'application</string>
-    <string name="settings_title_optional">Fonctionnalités optionnelles</string>
-    <string name="settings_title_mode">Mode de GoIV</string>
-    <string name="settings_title_uninteresting">Paramètres peu intéressants</string>
 </resources>

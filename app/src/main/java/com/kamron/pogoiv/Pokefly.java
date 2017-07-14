@@ -51,8 +51,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -105,7 +103,6 @@ public class Pokefly extends Service {
     private static final String KEY_BATTERY_SAVER = "key_battery_saver";
 
     private static final String KEY_SEND_INFO_NAME = "key_send_info_name";
-    private static final String KEY_SEND_INFO_TYPE = "key_send_info_type";
     private static final String KEY_SEND_INFO_CANDY = "key_send_info_candy";
     private static final String KEY_SEND_INFO_HP = "key_send_info_hp";
     private static final String KEY_SEND_INFO_CP = "key_send_info_cp";
@@ -159,8 +156,6 @@ public class Pokefly extends Service {
 
     private PokeInfoCalculator pokeInfoCalculator;
 
-    private AutoAppraisal autoAppraisal;
-
     //results pokemon picker auto complete
     @BindView(R.id.autoCompleteTextView1)
     AutoCompleteTextView autoCompleteTextView1;
@@ -190,6 +185,11 @@ public class Pokefly extends Service {
     @BindView(R.id.llButtonsOnCheck)
     LinearLayout onCheckButtonsLayout;
 
+
+    @BindView(R.id.appraisalIvRange)
+    Spinner appraisalIvRange;
+    @BindView(R.id.appraisalPercentageRange)
+    Spinner appraisalPercentageRange;
 
     // Layouts
     @BindView(R.id.inputBox)
@@ -279,22 +279,7 @@ public class Pokefly extends Service {
     @BindView(R.id.exResPokeSpam)
     TextView exResPokeSpam;
 
-
     // Refine by appraisal
-    @BindView(R.id.appraisalIVRangeGroup)
-    RadioGroup appraisalIVRangeGroup;
-
-    @BindView(R.id.appraisalIVRange4)
-    RadioButton appraisalIVRange4;
-    @BindView(R.id.appraisalIVRange3)
-    RadioButton appraisalIVRange3;
-    @BindView(R.id.appraisalIVRange2)
-    RadioButton appraisalIVRange2;
-    @BindView(R.id.appraisalIVRange1)
-    RadioButton appraisalIVRange1;
-
-    @BindView(R.id.attDefStaLayout)
-    LinearLayout attDefStaLayout;
     @BindView(R.id.attCheckbox)
     CheckBox attCheckbox;
     @BindView(R.id.defCheckbox)
@@ -302,24 +287,10 @@ public class Pokefly extends Service {
     @BindView(R.id.staCheckbox)
     CheckBox staCheckbox;
 
-    @BindView(R.id.appraisalStatsGroup)
-    RadioGroup appraisalStatsGroup;
-
-    @BindView(R.id.appraisalStat4)
-    RadioButton appraisalStat4;
-    @BindView(R.id.appraisalStat3)
-    RadioButton appraisalStat3;
-    @BindView(R.id.appraisalStat2)
-    RadioButton appraisalStat2;
-    @BindView(R.id.appraisalStat1)
-    RadioButton appraisalStat1;
-
-
     @BindView(R.id.positionHandler)
     ImageView positionHandler;
 
     private String pokemonName;
-    private String pokemonType;
     private String candyName;
     private Optional<Integer> pokemonCandy = Optional.absent();
     private Optional<Integer> pokemonCP = Optional.absent();
@@ -373,7 +344,6 @@ public class Pokefly extends Service {
 
     public static void populateInfoIntent(Intent intent, ScanResult scanResult, @NonNull Optional<String> filePath) {
         intent.putExtra(KEY_SEND_INFO_NAME, scanResult.getPokemonName());
-        intent.putExtra(KEY_SEND_INFO_TYPE, scanResult.getPokemonType());
         intent.putExtra(KEY_SEND_INFO_CANDY, scanResult.getCandyName());
         intent.putExtra(KEY_SEND_INFO_HP, scanResult.getPokemonHP());
         intent.putExtra(KEY_SEND_INFO_CP, scanResult.getPokemonCP());
@@ -438,8 +408,7 @@ public class Pokefly extends Service {
                 getResources().getIntArray(R.array.defense),
                 getResources().getIntArray(R.array.stamina),
                 getResources().getIntArray(R.array.devolutionNumber),
-                getResources().getIntArray(R.array.evolutionCandyCost),
-                getResources().getIntArray(R.array.candyNames));
+                getResources().getIntArray(R.array.evolutionCandyCost));
         displayMetrics = this.getResources().getDisplayMetrics();
         initOcr();
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
@@ -477,9 +446,6 @@ public class Pokefly extends Service {
             if (!batterySaver) {
                 screen = ScreenGrabber.getInstance();
                 watchScreen();
-                autoAppraisal = new AutoAppraisal(screen, ocr, this, attDefStaLayout,
-                        attCheckbox, defCheckbox, staCheckbox,
-                        appraisalIVRangeGroup, appraisalStatsGroup);
             } else {
                 screenShotHelper = ScreenShotHelper.start(Pokefly.this);
             }
@@ -502,11 +468,11 @@ public class Pokefly extends Service {
 
     private void watchScreen() {
         area[0] = new Point(                // these values used to get "white" left of "power up"
-                (int) Math.round(displayMetrics.widthPixels * 0.041667),
-                (int) Math.round(displayMetrics.heightPixels * 0.8046875));
+                Math.round(displayMetrics.widthPixels / 24),
+                (int) Math.round(displayMetrics.heightPixels / 1.24271845));
         area[1] = new Point(                // these values used to get greenish color in transfer button
-                (int) Math.round(displayMetrics.widthPixels * 0.862445),
-                (int) Math.round(displayMetrics.heightPixels * 0.9004));
+                (int) Math.round(displayMetrics.widthPixels / 1.15942029),
+                (int) Math.round(displayMetrics.heightPixels / 1.11062907));
 
         screenScanHandler = new Handler();
         screenScanRunnable = new Runnable() {
@@ -516,7 +482,6 @@ public class Pokefly extends Service {
                     boolean ret = scanPokemonScreen();
                     if (ret) {
                         screenScanRetries = 0; //skip further retries.
-                        printIVPreview();
                     } else {
                         screenScanRetries--;
                         screenScanHandler.postDelayed(screenScanRunnable, SCREEN_SCAN_DELAY_MS);
@@ -539,20 +504,10 @@ public class Pokefly extends Service {
         touchView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-                if (event.getActionMasked() == MotionEvent.ACTION_OUTSIDE) { // Touch event outside of GoIV UI
-                    // Let's check first to see if the user is performing an Appraisal
-                    if (!batterySaver && appraisalBox.getVisibility() == View.VISIBLE) {
-                        // Let autoAppraisal know that the user has touched the PokemonGo app while the
-                        // appraisalBox was Visible.  This is our indication that the user has started a Pogo appraisal
-                        autoAppraisal.screenTouched();
-                    } else {
-                        // Not appraising, let's check to see if they're looking at a pokemon screen.
-                        // The postDelayed will wait SCREEN_SCAN_DELAY_MS after the user touches the screen before
-                        // performing a scan of the screen to detect the pixels associated with a Pokemon screen.
-                        screenScanHandler.removeCallbacks(screenScanRunnable);
-                        screenScanHandler.postDelayed(screenScanRunnable, SCREEN_SCAN_DELAY_MS);
-                        screenScanRetries = SCREEN_SCAN_RETRIES;
-                    }
+                if (event.getActionMasked() == MotionEvent.ACTION_OUTSIDE) {
+                    screenScanHandler.removeCallbacks(screenScanRunnable);
+                    screenScanHandler.postDelayed(screenScanRunnable, SCREEN_SCAN_DELAY_MS);
+                    screenScanRetries = SCREEN_SCAN_RETRIES;
                 }
                 return false;
             }
@@ -583,81 +538,12 @@ public class Pokefly extends Service {
 
         if (pixels != null) {
             boolean shouldShow =
-                    (pixels[0] == Color.rgb(250, 250, 250) || pixels[0] == Color.rgb(249, 249, 249))
-                            && pixels[1] == Color.rgb(28, 135, 150);
+                    pixels[0] == Color.rgb(250, 250, 250) && pixels[1] == Color.rgb(28, 135, 150);
             setIVButtonDisplay(shouldShow);
-
-
             return shouldShow;
         }
         return false;
     }
-
-    /**
-     * Shows a toast message that displays either a short message about the pokemon currently on the screen, or the
-     * users clipboard setting about the pokemon currently on the screen.
-     */
-    private void printIVPreview() {
-
-        if (settings.shouldShowQuickIVPreview()) {
-            final Context thisContext = this;
-
-            final Handler handler = new Handler();
-            //A delayed action, because the screengrabber needs to wait and ensure there's a frame to grab - fails if
-            //the delay is not long enough.
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Bitmap bmp = screen.grabScreen();
-                    //
-                    if (bmp == null) {
-                        Toast.makeText(thisContext, R.string.scanFailed, Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    boolean s8Patch = false;
-                    double screenRatio = (double) displayMetrics.heightPixels / (double) displayMetrics.widthPixels;
-                    if (screenRatio > 1.9 && screenRatio < 2.06) {
-                        s8Patch = true;
-                    }
-                    ScanResult res = ocr.scanPokemon(bmp, trainerLevel, s8Patch);
-
-                    //if scan is successful, this message will be overwritten and not shown.
-                    String toastMessage = "Failed to perform quickscan";
-                    if (res.isFailed()) {
-                        Toast.makeText(Pokefly.this, getString(R.string.scan_pokemon_failed), Toast.LENGTH_SHORT)
-                                .show();
-                    }
-
-                    if (res.getPokemonHP().isPresent() && res.getPokemonCP().isPresent()) {
-                        Pokemon poke = corrector.getPossiblePokemon(res.getPokemonName(), res.getCandyName(),
-                                res.getUpgradeCandyCost(),
-                                res.getPokemonType()).pokemon;
-                        IVScanResult ivrs = pokeInfoCalculator.getIVPossibilities(poke, res.getEstimatedPokemonLevel(),
-                                res
-                                        .getPokemonHP().get(), res
-                                        .getPokemonCP().get());
-
-                        if (ivrs.getCount() > 0) {
-                            if (settings.shouldReplaceQuickIvPreviewWithClipboard()) {
-                                toastMessage = getClipboardStringForIvScan(ivrs);
-                            } else {
-                                toastMessage = "IV: " + ivrs.getLowestIVCombination().percentPerfect + " - "
-                                        + ivrs.getHighestIVCombination().percentPerfect + "%";
-                            }
-                        }
-
-                    }
-
-                    Toast.makeText(thisContext, toastMessage, Toast.LENGTH_SHORT).show();
-
-                }
-            }, 50);
-
-        }
-
-
-    }
-
 
     private boolean infoLayoutArcPointerVisible = false;
 
@@ -707,7 +593,6 @@ public class Pokefly extends Service {
 
     /**
      * Creates the GoIV notification.
-     *
      * @param isStopping should we make starting or stopping notification
      */
     private void makeNotification(boolean isStopping) {
@@ -1062,45 +947,57 @@ public class Pokefly extends Service {
     }
 
     /**
-     * Changes the text in the appraisal checkboxes depending on what team the player is on.
+     * Changes the text in the appraisal spinners depending on what team the user is on.
      */
     private void populateTeamAppraisalSpinners() {
+        //Create the adapters for the spinners
+        ArrayAdapter<CharSequence> adapterIvRange;
+        ArrayAdapter<CharSequence> adapterPercentage;
 
         //Load the correct phrases from the text resources depending on what team is stored in app settings
-        if (settings.playerTeam() == 0) { //mystic
-            appraisalIVRange4.setText(R.string.mv4);
-            appraisalIVRange3.setText(R.string.mv3);
-            appraisalIVRange2.setText(R.string.mv2);
-            appraisalIVRange1.setText(R.string.mv1);
+        if (settings.playerTeam() == 0) {
+            adapterIvRange = ArrayAdapter.createFromResource(this,
+                    R.array.mystic_ivrange, R.layout.spinner_appraisal);
+            adapterPercentage = ArrayAdapter.createFromResource(this,
+                    R.array.mystic_percentage, R.layout.spinner_appraisal);
 
-            appraisalStat1.setText(R.string.ms1);
-            appraisalStat2.setText(R.string.ms2);
-            appraisalStat3.setText(R.string.ms3);
-            appraisalStat4.setText(R.string.ms4);
-
-        } else if (settings.playerTeam() == 1) { //valor
-
-            appraisalIVRange4.setText(R.string.vv4);
-            appraisalIVRange3.setText(R.string.vv3);
-            appraisalIVRange2.setText(R.string.vv2);
-            appraisalIVRange1.setText(R.string.vv1);
-
-            appraisalStat1.setText(R.string.vs1);
-            appraisalStat2.setText(R.string.vs2);
-            appraisalStat3.setText(R.string.vs3);
-            appraisalStat4.setText(R.string.vs4);
-        } else { //instinct
-
-            appraisalIVRange4.setText(R.string.iv4);
-            appraisalIVRange3.setText(R.string.iv3);
-            appraisalIVRange2.setText(R.string.iv2);
-            appraisalIVRange1.setText(R.string.iv1);
-
-            appraisalStat1.setText(R.string.is1);
-            appraisalStat2.setText(R.string.is2);
-            appraisalStat3.setText(R.string.is3);
-            appraisalStat4.setText(R.string.is4);
+        } else if (settings.playerTeam() == 1) {
+            adapterIvRange = ArrayAdapter.createFromResource(this,
+                    R.array.valor_ivrange, R.layout.spinner_appraisal);
+            adapterPercentage = ArrayAdapter.createFromResource(this,
+                    R.array.valor_percentage, R.layout.spinner_appraisal);
+        } else {
+            adapterIvRange = ArrayAdapter.createFromResource(this,
+                    R.array.instinct_ivrange, R.layout.spinner_appraisal);
+            adapterPercentage = ArrayAdapter.createFromResource(this,
+                    R.array.instinct_percentage, R.layout.spinner_appraisal);
         }
+
+        appraisalIvRange.setAdapter(adapterIvRange);
+        appraisalPercentageRange.setAdapter(adapterPercentage);
+
+
+        appraisalIvRange.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                //We don't want anything to happen when the user has selected an item that does not exist or the
+                // spinner disappears, but interface requires implementation so here's an empty method.
+            }
+        });
+        appraisalPercentageRange.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+
+            }
+        });
 
     }
 
@@ -1128,6 +1025,7 @@ public class Pokefly extends Service {
         communicator.spreadResultIntent(this, ScanContainer.scanContainer.currScan, pokemonUniqueID);
         cancelInfoDialog();
     }
+
 
 
     private void resetToSpinner() {
@@ -1293,10 +1191,9 @@ public class Pokefly extends Service {
 
         refineByAvailableAppraisalInfo(ivScanResult);
 
-        //Dont run clipboard logic if scan failed - some tokens might crash the program.
-        if (ivScanResult.iVCombinations.size() > 0) {
-            addClipboardInfoIfSettingOn(ivScanResult);
-        }
+
+
+        addClipboardInfoIfSettingOn(ivScanResult);
         populateResultsBox(ivScanResult);
         boolean enableCompare = ScanContainer.scanContainer.prevScan != null;
         exResCompare.setEnabled(enableCompare);
@@ -1360,9 +1257,6 @@ public class Pokefly extends Service {
                 Toast.makeText(this, userInput + getString(R.string.wrong_pokemon_name_input),
                         Toast.LENGTH_SHORT).show();
                 return null;
-            } else {
-                // reset spinner selecction to avoid a crash
-                extendedEvolutionSpinner.setSelection(-1);
             }
         }
         return pokemon;
@@ -1387,77 +1281,16 @@ public class Pokefly extends Service {
      * @param ivScanResult the scan result to refine
      */
     private void refineByAvailableAppraisalInfo(IVScanResult ivScanResult) {
-
         if (attCheckbox.isChecked() || defCheckbox.isChecked() || staCheckbox.isChecked()) {
             ivScanResult.refineByHighest(attCheckbox.isChecked(), defCheckbox.isChecked(), staCheckbox.isChecked());
         }
 
-        ivScanResult.refineByAppraisalPercentageRange(getSelectedAppraiseIVRangeValue());
-
-        ivScanResult.refineByAppraisalIVRange(getSelectedAppraiseStatRangeValue());
-
-    }
-
-    /**
-     * Returns which value the user has selected related to the appraisal stat range.
-     *
-     * @return a number corresponding to which appraisalstat is selected.
-     */
-    private int getSelectedAppraiseStatRangeValue() {
-        if (appraisalStat1.isChecked()) {
-            return 1;
+        if (appraisalPercentageRange.getSelectedItemPosition() != 0) {
+            ivScanResult.refineByAppraisalPercentageRange(appraisalPercentageRange.getSelectedItemPosition());
         }
-        if (appraisalStat2.isChecked()) {
-            return 2;
+        if (appraisalIvRange.getSelectedItemPosition() != 0) {
+            ivScanResult.refineByAppraisalIVRange(appraisalIvRange.getSelectedItemPosition());
         }
-        if (appraisalStat3.isChecked()) {
-            return 3;
-        }
-        if (appraisalStat4.isChecked()) {
-            return 4;
-        }
-        return 0;
-    }
-
-    /**
-     * Returns which value the user has selected related to the appraisal iv % range.
-     *
-     * @return a number corresponding to which appraisalrange is selected.
-     */
-    private int getSelectedAppraiseIVRangeValue() {
-        if (appraisalIVRange1.isChecked()) {
-            return 1;
-        }
-        if (appraisalIVRange2.isChecked()) {
-            return 2;
-        }
-        if (appraisalIVRange3.isChecked()) {
-            return 3;
-        }
-        if (appraisalIVRange4.isChecked()) {
-            return 4;
-        }
-        return 0;
-    }
-
-
-    /**
-     * Get the clipboard string as dictated by the current user settings for clipboard tokens and single/multi results
-     *
-     * @param ivScanResult The scan to populate the string with
-     * @return A string which is built differently based on the users settings.
-     */
-    private String getClipboardStringForIvScan(IVScanResult ivScanResult) {
-        ClipboardTokenHandler cth = new ClipboardTokenHandler(getApplicationContext());
-        String clipResult = "";
-
-        // has the user enabled the setting for different results and is there just a single result??
-        if (settings.shouldCopyToClipboardSingle() && ivScanResult.getCount() == 1) {
-            clipResult = cth.getResults(ivScanResult, pokeInfoCalculator, true);
-        } else {
-            clipResult = cth.getResults(ivScanResult, pokeInfoCalculator, false);
-        }
-        return clipResult;
     }
 
     /**
@@ -1465,7 +1298,15 @@ public class Pokefly extends Service {
      */
     private void addClipboardInfoIfSettingOn(IVScanResult ivScanResult) {
         if (settings.shouldCopyToClipboard()) {
-            String clipResult = getClipboardStringForIvScan(ivScanResult);
+            ClipboardTokenHandler cth = new ClipboardTokenHandler(getApplicationContext());
+            String clipResult = "";
+
+            // has the user enabled the setting for different results and is there just a single result??
+            if (settings.shouldCopyToClipboardSingle() && ivScanResult.getCount() == 1) {
+                clipResult = cth.getResults(ivScanResult, pokeInfoCalculator, true);
+            } else {
+                clipResult = cth.getResults(ivScanResult, pokeInfoCalculator, false);
+            }
 
             if (settings.shouldCopyToClipboardShowToast()) {
                 Toast toast = Toast.makeText(this, String.format(getString(R.string.clipboard_copy_toast), clipResult),
@@ -1477,30 +1318,6 @@ public class Pokefly extends Service {
             ClipData clip = ClipData.newPlainText(clipResult, clipResult);
             clipboard.setPrimaryClip(clip);
         }
-    }
-
-    /**
-     * Adds the iv range of the pokemon to the clipboard if the clipboard setting is on.
-     */
-    public void addSpecificClipboard(IVScanResult ivScanResult, IVCombination ivCombination) {
-
-
-        ClipboardTokenHandler cth = new ClipboardTokenHandler(getApplicationContext());
-        String clipResult = "";
-        IVScanResult singleIVScanResult = new IVScanResult(ivScanResult.pokemon, ivScanResult.estimatedPokemonLevel,
-                ivScanResult.scannedCP);
-        singleIVScanResult.addIVCombination(ivCombination.att, ivCombination.def, ivCombination.sta);
-        clipResult = cth.getResults(singleIVScanResult, pokeInfoCalculator, true);
-
-
-        Toast toast = Toast.makeText(this, String.format(getString(R.string.clipboard_copy_toast), clipResult),
-                Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.CENTER, 0, 0);
-        toast.show();
-
-        ClipData clip = ClipData.newPlainText(clipResult, clipResult);
-        clipboard.setPrimaryClip(clip);
-
     }
 
     /**
@@ -1616,7 +1433,7 @@ public class Pokefly extends Service {
      * Adds all options in the all iv possibilities list.
      */
     private void populateAllIvPossibilities(IVScanResult ivScanResult) {
-        IVResultsAdapter ivResults = new IVResultsAdapter(ivScanResult, this);
+        IVResultsAdapter ivResults = new IVResultsAdapter(ivScanResult);
         rvResults.setAdapter(ivResults);
     }
 
@@ -1686,14 +1503,8 @@ public class Pokefly extends Service {
         double maxCP = pokeInfoCalculator.getCpRangeAtLevel(selectedPokemon,
                 IVCombination.MAX, IVCombination.MAX, 40).high;
         double perfection = (100.0 * cpRange.getFloatingAvg()) / maxCP;
-        int difference = (int) (cpRange.getFloatingAvg() - maxCP);
         DecimalFormat df = new DecimalFormat("#.#");
-        String sign = "";
-        if (difference >= 0) {
-            sign = "+";
-        }
-        String differenceString = "(" + sign + difference + ")";
-        String perfectionString = df.format(perfection) + "% " + differenceString;
+        String perfectionString = df.format(perfection) + "%";
         exResultPercentPerfection.setText(perfectionString);
     }
 
@@ -1874,31 +1685,19 @@ public class Pokefly extends Service {
      */
     public void cancelInfoDialog() {
         hideInfoLayoutArcPointer();
-
-        resetAppraisalCheckBoxes();
-
-        resetPokeflyStateMachine();
-        resetInfoDialogue();
-        if (!batterySaver) {
-            autoAppraisal.reset();
-            setIVButtonDisplay(true);
-        }
-    }
-
-    /**
-     * toggles all the appraisal boxes to false.
-     */
-    private void resetAppraisalCheckBoxes() {
-
         attCheckbox.setChecked(false);
         defCheckbox.setChecked(false);
         staCheckbox.setChecked(false);
 
-        appraisalIVRangeGroup.clearCheck();
+        appraisalIvRange.setSelection(0);
+        appraisalPercentageRange.setSelection(0);
 
-        appraisalStatsGroup.clearCheck();
+        resetPokeflyStateMachine();
+        resetInfoDialogue();
+        if (!batterySaver) {
+            setIVButtonDisplay(true);
+        }
     }
-
 
     /**
      * Displays the all possibilities dialog.
@@ -1935,23 +1734,6 @@ public class Pokefly extends Service {
         extendedEvolutionSpinner.setSelection(-1);
         resultsBox.setVisibility(View.GONE);
         allPossibilitiesBox.setVisibility(View.GONE);
-
-        //Below code handles resetting appraisal box, and then expanding it if user has that setting enabled.
-        if (appraisalBox.getVisibility() == View.VISIBLE) {
-            toggleAppraisalBox();
-        }
-
-    }
-
-    /**
-     * Opens input appraisal expand box if setting for defaulting to expansion is on.
-     */
-    private void openAppraisalBoxIfSettingOn() {
-        if (settings.shouldAutoOpenExpandedAppraise()) {
-            setVisibility(inputAppraisalExpandBox, appraisalBox, true, true);
-            positionHandler.setVisibility(appraisalBox.getVisibility());
-            moveOverlayUpOrDownToMatchAppraisalBox();
-        }
     }
 
     /**
@@ -2010,7 +1792,7 @@ public class Pokefly extends Service {
 
             infoShownReceived = true;
             PokemonNameCorrector.PokeDist possiblePoke = corrector.getPossiblePokemon(pokemonName, candyName,
-                    candyUpgradeCost, pokemonType);
+                    candyUpgradeCost);
             initialButtonsLayout.setVisibility(View.VISIBLE);
             onCheckButtonsLayout.setVisibility(View.GONE);
 
@@ -2050,7 +1832,6 @@ public class Pokefly extends Service {
             }
         }
         showCandyTextBoxBasedOnSettings();
-        openAppraisalBoxIfSettingOn();
     }
 
     private <T> String optionalIntToString(Optional<T> src) {
@@ -2074,7 +1855,7 @@ public class Pokefly extends Service {
         ocr = OcrHelper.init(extdir, displayMetrics.widthPixels, displayMetrics.heightPixels,
                 pokeInfoCalculator.get(28).name,
                 pokeInfoCalculator.get(31).name,
-                settings);
+                settings.isPokeSpamEnabled());
     }
 
 
@@ -2088,14 +1869,9 @@ public class Pokefly extends Service {
     private void scanPokemon(Bitmap pokemonImage, @NonNull Optional<String> screenShotPath) {
         //WARNING: this method *must* always send an intent at the end, no matter what, to avoid the application
         // hanging.
-        boolean s8Patch = false;
-        double screenRatio = (double) displayMetrics.heightPixels / (double) displayMetrics.widthPixels;
-        if (screenRatio > 1.9 && screenRatio < 2.06) {
-            s8Patch = true;
-        }
         Intent info = Pokefly.createNoInfoIntent();
         try {
-            ScanResult res = ocr.scanPokemon(pokemonImage, trainerLevel, s8Patch);
+            ScanResult res = ocr.scanPokemon(pokemonImage, trainerLevel);
             if (res.isFailed()) {
                 Toast.makeText(Pokefly.this, getString(R.string.scan_pokemon_failed), Toast.LENGTH_SHORT).show();
             }
@@ -2165,7 +1941,6 @@ public class Pokefly extends Service {
                     receivedInfo = true;
 
                     pokemonName = intent.getStringExtra(KEY_SEND_INFO_NAME);
-                    pokemonType = intent.getStringExtra(KEY_SEND_INFO_TYPE);
                     candyName = intent.getStringExtra(KEY_SEND_INFO_CANDY);
 
 
@@ -2208,9 +1983,7 @@ public class Pokefly extends Service {
      * hide the IV Button.
      */
     private void setIVButtonDisplay(boolean show) {
-
         if (show && !ivButtonShown && !infoShownSent) {
-
             windowManager.addView(ivButton, ivButtonParams);
             ivButtonShown = true;
         } else if (!show) {
@@ -2224,6 +1997,4 @@ public class Pokefly extends Service {
     private int dpToPx(int dp) {
         return Math.round(dp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
     }
-
-
 }
